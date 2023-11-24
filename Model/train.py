@@ -1,9 +1,5 @@
 # basic packags
 import pandas as pd
-import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
-
 import sys
 from config.core import config
 import xgboost as xgb

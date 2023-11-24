@@ -1,7 +1,6 @@
 from typing import List
 from pydantic import BaseModel, validator
 from strictyaml import YAML, load
-import pydantic
 
 
 # App
