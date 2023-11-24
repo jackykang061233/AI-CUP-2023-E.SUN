@@ -1,0 +1,87 @@
+app_config:
+    # Overview
+    package_name: "model-training"
+    
+    # Training data
+    training_data: "training.csv"
+    
+    # Predict data
+    predict_path: "prediction.csv"
+    
+log_config:
+    target: "label"
+
+    used_model: 'xgboost'
+
+    # not used features
+    to_drop: 
+        - 'locdt'
+        
+    object_features:
+        - "txkey"
+        - "chid"
+        - "cano"
+        - "mchno"
+        - "acqic"
+    
+    numeric_features:
+        - "locdt"
+        - "loctm"
+        - "conam"
+        - "iterm"
+        - "csmam"
+        - "flam1"
+
+    categorical_features:
+        - "etymd"
+        - "mcc"
+        - "ecfg"
+        - "scity"
+        - "ovrlt"
+        - "csmcu"
+        - "txkey"
+        - "chid"
+        - "cano"
+        - "mchno"
+        - "acqic"
+        - "contp"
+        - "bnsfg"
+        - "stocn"
+        - "stscd"
+        - "flbmk"
+        - "hcefg"
+        - "flg_3dsmk"
+
+    # features with missing value
+    vars_with_na:
+        - "etymd"
+        - "mcc"
+        - "scity"
+        - "csmcu"
+        - "stocn"
+        - "stscd"
+        - "hcefg"
+        
+    # For train test split
+    random_state: 42
+    test_size: 0.1
+
+    time_transform: "loctm"
+    
+    xgb:
+        objective: "binary:logistic"
+        random_state: 42
+        scale_pos_weight: 3
+        n_estimators: 250
+        learning_rate: 0.1
+        gamma: 0.05
+        reg_alpha: 0
+        reg_lambda: 0
+        max_depth: 5
+        min_child_weight: 3
+        colsample_bytree: 1
+        device: "cpu"
+        subsample: 0.6
+        n_jobs: -1
+
+
