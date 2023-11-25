@@ -1,3 +1,6 @@
+"""
+進行模型訓練
+"""
 import pandas as pd
 from config.core import config
 import xgboost as xgb
