@@ -7,7 +7,9 @@
 
 * Preprocess/: 資料前處理
   * pipeline.py: 使用sklearn pipeline將原始資料轉換，並將
-    * 
+    * 進行轉換的pipeline儲存為feature_transoform_pipe.joblib
+    * 轉換過後的訓練資料(不含label)儲存為transformed_training.csv
+    * label儲存為label.csv
 * Model/: 模型訓練及預測
   * train.py: load preprocess後的資料進行訓練
   * predict.py: 使用train.py訓練過的模型進行預測，並將最終預測儲存在final_prediction.csv
