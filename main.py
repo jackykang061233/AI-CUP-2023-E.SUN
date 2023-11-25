@@ -1,3 +1,6 @@
+"""
+模型訓練以及預測
+"""
 from Model.train import train
 from Model.predict import prediction
 from Preprocess.pipeline import TimeTransformer 
