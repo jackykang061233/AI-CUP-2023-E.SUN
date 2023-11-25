@@ -1,7 +1,8 @@
 # AI-CUP-2023-E.SUN
 
 # 基本資訊
-假設訓練資料為training.csv和預測資料為predict.csv
+* 訓練資料為training.csv(在preprocess時為function feature_transform的input)
+* 預測資料為predict.csv(在ppredict時為function prediction的input)
 
 # 檔案用途:
 
