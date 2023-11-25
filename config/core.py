@@ -1,3 +1,6 @@
+"""
+印證config.yml裡的configuration型態
+"""
 from typing import List
 from pydantic import BaseModel, validator
 from strictyaml import YAML, load
