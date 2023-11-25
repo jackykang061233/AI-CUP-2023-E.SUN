@@ -1,3 +1,4 @@
+""" 進行結果預測 """
 import pandas as pd
 from config.core import config
 from joblib import load
