@@ -2,7 +2,8 @@
 
 # 基本資訊
 * 訓練資料為training.csv(在preprocess時為function feature_transform的input)
-* 預測資料為predict.csv(在ppredict時為function prediction的input)
+* 預測資料為predict.csv(在predict時為function prediction的input)
+* 最終預測結果會儲存為final_prediction.csv
 
 # 檔案用途:
 
