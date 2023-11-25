@@ -1,3 +1,12 @@
+"""
+進行preprocessing並
+- 將input X儲存為transformed_training.csv
+- 將input y儲存為label.csv
+- 將使用過的pipeline儲存為feature_transoform_pipe.joblib，以便之後在prediction時使用
+
+input:
+- training.py: 訓練資料位置
+"""
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import RobustScaler, TargetEncoder, MinMaxScaler
