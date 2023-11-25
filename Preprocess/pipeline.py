@@ -1,15 +1,13 @@
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import RobustScaler, TargetEncoder
+from sklearn.preprocessing import RobustScaler, TargetEncoder, MinMaxScaler
 from sklearn.compose import ColumnTransformer
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
-
 import pandas as pd
 
 import joblib
-from typing import Tuple, List
+from typing import Tuple, List, Union
 
 import sys
 from os.path import dirname, join, abspath
@@ -17,15 +15,60 @@ sys.path.insert(0, abspath(join(dirname(__file__), '..')))
 from config.core import config
 
 class TimeTransformer(BaseEstimator, TransformerMixin):
-    """ Normalize time, e.g. 120000 => 0.5"""
-    def __init__(self, variables: str):
+    """
+    將要進行轉換的features欄位轉換成秒並使用MinMaxScaler進行normalization
+
+    Parameters:
+    - variables (str or list of str): 要進行轉換的features
+
+    Methods:
+    - fit(X, y=None): Fit the transformer.
+    - transform(X): 將feature轉換成秒後使用MinMaxScaler進行normalization
+
+    """
+    
+    def __init__(self, variables: Union[str, List[str]]):
+        """
+        TimeTransformer class的Constructor
+
+        Parameters:
+        - variables (str or list of str): 要進行轉換的features
+        """
         self.variables = variables
 
     def fit(self, X:pd.DataFrame, y:pd.Series=None):
+        """
+        Fit the transformer
+
+        Parameters:
+        - X (pd.DataFrame): input的DataFrame
+        - y (pd.Series): input的target (可以省略)
+
+        Returns:
+        TimeTransformer: fit後的TimeTransformer instance
+        """
         return self
 
     def transform(self, X:pd.DataFrame) -> pd.DataFrame:
-        def to_second(x):
+        """
+        將feature轉換成秒後使用MinMaxScaler進行normalization
+
+        Parameters:
+        - X (pd.DataFrame): input的DataFrame
+
+        Returns:
+        pd.DataFrame: 轉換後的DataFrame.
+        """
+        def to_second(x: int):
+            """
+            將原數轉換成秒
+
+            Parameters:
+            - X (int): input的值 從 000000(在這裡為0) 到 235959 前兩位為小時中間兩位為分後兩位為秒
+
+            Returns:
+            int: 轉換後的秒數
+            """
             hours = x // 10000
             minutes = (x % 10000) // 100
             seconds = x % 100
@@ -41,6 +84,20 @@ class TimeTransformer(BaseEstimator, TransformerMixin):
 
         
 def pipeline(columns: List) -> Tuple[Pipeline, List]:
+    """
+    將原始資料進行feature engineering然後
+    - 將X儲存為transformed_training.csv
+    - 將y儲存為label.csv
+    - 並將使用過的pipeline儲存為feature_transoform_pipe.joblib，以便之後在prediction時使用
+
+    Parameters:
+    - path (str): 原始訓練資料位置
+
+    Returns:
+    - pipe (Pipeline): 融合所有feature engineering steps的pipeline
+    - new_order_columns (list): 因為經過columnstransformer後feature的相對會被打亂所以需要一個更新過後的feature排列位置
+    
+    """
     
     # transform obj
     obj_columns = [(index, c) for index, c in enumerate(columns) if c in config.log_config.categorical_features]
@@ -79,6 +136,19 @@ def pipeline(columns: List) -> Tuple[Pipeline, List]:
     return pipe, new_order_columns
     
 def feature_transform(path: str) -> None:
+    """
+    將原始資料進行feature engineering然後
+    - 將X儲存為transformed_training.csv
+    - 將y儲存為label.csv
+    - 並將使用過的pipeline儲存為feature_transoform_pipe.joblib，以便之後在prediction時使用
+
+    Parameters:
+    - path (str): 原始訓練資料位置
+
+    Returns:
+    無
+    
+    """
     df = pd.read_csv(path)
 
     to_drop = config.log_config.to_drop
@@ -98,7 +168,7 @@ def feature_transform(path: str) -> None:
     y_train.to_csv('label.csv', index=False)
     
 if __name__ == '__main__':
-    feature_transform('test.csv')
+    feature_transform('training.csv')
 
     
 
