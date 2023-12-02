@@ -47,13 +47,14 @@ log_config:
 
     # features with missing value
     vars_with_na:
+        - "scity"
+        
+    add_na_column: 
+        - "hcefg"
         - "etymd"
         - "mcc"
-        - "scity"
         - "csmcu"
         - "stocn"
-        - "stscd"
-        - "hcefg"
         
     # For train test split
     random_state: 42
@@ -77,4 +78,5 @@ log_config:
         device: "cpu"
         subsample: 0.6
         n_jobs: -1
+        
 

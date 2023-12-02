@@ -23,6 +23,8 @@ class XgbConfig(BaseModel):
     colsample_bytree: float
     subsample: float
     n_jobs: int
+    
+    
 
 # Model config
 class LogConfig(BaseModel):
@@ -36,6 +38,7 @@ class LogConfig(BaseModel):
     random_state: int
     test_size: float
     vars_with_na: List[str]
+    add_na_column: List[str]
     time_transform: str
     xgb: XgbConfig
 

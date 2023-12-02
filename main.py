@@ -3,7 +3,7 @@
 """
 from Model.train import train
 from Model.predict import prediction
-from Preprocess.pipeline import TimeTransformer 
+from Preprocess.pipeline import TimeTransformer, NewNAColumn
 
 
 if __name__ == '__main__':

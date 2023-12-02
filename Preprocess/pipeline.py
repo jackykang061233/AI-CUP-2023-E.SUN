@@ -14,6 +14,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.model_selection import train_test_split
 import pandas as pd
+import numpy as np
 
 import joblib
 from typing import Tuple, List, Union
@@ -90,6 +91,20 @@ class TimeTransformer(BaseEstimator, TransformerMixin):
         X[self.variables] = scaler.fit_transform(X[self.variables].values.reshape(-1, 1))
 
         return X
+    
+class NewNAColumn(BaseEstimator, TransformerMixin):
+    """ create new column for na value which indicates if it is na 1 for nan value 0 for not nan value"""
+    def __init__(self, col):
+        self.col = col
+        
+    def fit(self, X=None, y=None):
+        return self
+    
+    def transform(self, X, y=None):
+        for col in self.col:
+            X[col+'_na'] = np.where(X[col].isnull(), 1, 0)
+            X[col] = X[col].fillna(X[col].nunique())
+        return X
 
         
 def pipeline(columns: List) -> Tuple[Pipeline, List]:
@@ -135,6 +150,7 @@ def pipeline(columns: List) -> Tuple[Pipeline, List]:
 
     steps = [
             ('time_transformation', TimeTransformer(variables=config.log_config.time_transform)),
+            ('add_na_column', NewNAColumn(col=config.log_config.add_na_column)),
             ('obj_transformation', transform_object),
             ('na_values_imputation', fill_na),
             ('scaler', RobustScaler()),        
@@ -170,6 +186,14 @@ def feature_transform(path: str) -> None:
 
     pipe, new_order_columns = pipeline(X_train.columns)
     transformed_df = pipe.fit_transform(X_train, y_train)
+    
+    na_column_index = []
+    for i, col in enumerate(new_order_columns):
+        if col in config.log_config.add_na_column:
+            na_column_index.append((i, 'col_na'))
+    for i in range(len(na_column_index)):
+        new_order_columns.insert(na_column_index[i][0]+i+1, na_column_index[i][1])
+    
     transformed_df = pd.DataFrame(transformed_df, columns=new_order_columns)
 
     joblib.dump(pipe, 'feature_transoform_pipe.joblib')
@@ -180,6 +204,3 @@ if __name__ == '__main__':
     feature_transform('training.csv')
 
     
-
-
-
